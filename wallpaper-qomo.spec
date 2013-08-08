@@ -1,6 +1,6 @@
 Name: wallpaper-qomo
 Version: 4.8
-Release: 2
+Release: 3
 Summary: wallpapers for Qomo Linux
 Group: Themes
 License: GPL
@@ -41,11 +41,21 @@ pushd /usr/share/wallpapers/ &>/dev/null
     rm -rf wallpaper-default
     ln -sf loverf wallpaper-default
 popd &>/dev/null
+[[ -x /usr/share/wallpapers/update-gnome-wallpaper.sh ]] && /usr/share/wallpapers/update-gnome-wallpaper.sh
+pushd /usr/share/apps/ksplash/Themes/ &>/dev/null
+    ! test -e Default || test -e default || ln -sf Default default
+popd &>/dev/null
+
 
 %postun
 pushd /usr/share/wallpapers/ &>/dev/null
     test -L wallpaper-default && unlink wallpaper-default
 popd &>/dev/null
+
+pushd /usr/share/apps/ksplash/Themes/ &>/dev/null
+    test -L default && test ! -e default && unlink default
+popd &>/dev/null
+
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -81,6 +91,9 @@ rm -rf ${RPM_BUILD_ROOT}
 /usr/share/wallpapers/loverf/metadata.desktop
 
 %changelog
+* Thu Aug 8 2013 sunzhigang <sunzhigang@redflag-linux.com> 4.8-3
+- configure the default ksplash
+
 * Thu Aug 8 2013 sunzhigang <sunzhigang@redflag-linux.com> 4.8-2
 - add wallpaper by loverf
 
